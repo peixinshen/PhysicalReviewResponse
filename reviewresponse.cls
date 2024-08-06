@@ -1,7 +1,10 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{reviewresponse}[2024/03/17 v2.0 class for writing rebuttal letters for reviews of submitted papers]
-% Author: Karl-Ludwig Besser
+\ProvidesClass{reviewresponse}[2024/06/08 v1.0 class for writing rebuttal letters for Physical Review Journals]
+% Original Author: Karl-Ludwig Besser
 % Email: karl.besser@princeton.edu
+% Modified by: Pei-Xin Shen
+% Email: peixin.shen@outlook.com
+% This work is a modification of the original reviewresponse template (https://github.com/klb2/review-response-template).
 
 \RequirePackage{kvoptions}
 
@@ -20,11 +23,16 @@
 \newcommand*{\@editorname}{}
 \newcommand*{\manuscript}[1]{\renewcommand*{\@manuscript}{#1}}
 \newcommand*{\@manuscript}{}
+\newcommand*{\firstauthor}[1]{\renewcommand*{\@firstauthor}{#1}}
+\newcommand*{\@firstauthor}{}
 
 \newcommand*{\thetitle}{\@title}
 \newcommand*{\theauthor}{\@author}
+\newcommand*{\thefirstauthor}{\@firstauthor}
 \newcommand*{\thedate}{\@date}
+\newcommand*{\thejournal}{\@journal}
 \newcommand*{\theeditor}{\@editorname}
+\newcommand*{\themanuscript}{\@manuscript}
 
 %%% Colors
 \definecolor{colorcommentfg}{RGB}{0,63,87}
@@ -46,10 +54,15 @@
 %%%
 
 %%% Counters
-\newcounter{reviewer}
-\setcounter{reviewer}{0}
-\newcounter{revcomment}[reviewer]
+\newcounter{referee}
+\setcounter{referee}{0}
+\renewcommand\thereferee{\Alph{referee}}
+\newcounter{revcomment}[referee]
 \setcounter{revcomment}{0}
+\renewcommand\therevcomment{\Alph{referee}\arabic{revcomment}}
+\newcounter{revresponse}[referee]
+\setcounter{revresponse}{0}
+\renewcommand\therevresponse{\Alph{referee}\arabic{revresponse}}
 %%%
 
 %%% Commands
@@ -57,73 +70,83 @@
 	\begin{titlepage}
 		\begin{center}
 			\vspace*{1cm}
-			\large{Responses to Reviewers' Comments for Manuscript \@manuscript}\\
+			\large{Responses to Referees' Comments for Manuscript {\@manuscript} {\@firstauthor}}\\
 			
 			\vspace{1cm}
 			\textbf{\LARGE{\@title}}\\
 			\vspace{1cm}
-			\large{Addressed Comments for Publication to}
+			\large{Addressed Comments for Publication in}
 			
 			\Large{\@journal}
 			
 			\large{by}
 			
 			{\large{\@author}}
+
+			{\large{\@date}}
 		\end{center}
 	\end{titlepage}
 }
 
-\newcommand*{\editor}{
+\newcommand*{\change}{
 	\clearpage
 	\@ifundefined{pdfbookmark}{}{%
-		\pdfbookmark[1]{Reponse to the Editor}{hyperref@editor}%
+		\pdfbookmark[1]{Summary of Changes}{hyperref@change}%
 	}%
-	\section*{Authors' Response to the Editor}
+	\section*{Summary of Changes}
 }
 
-\newcommand*{\reviewer}{
+\newcommand*{\referee}{
 	\clearpage
-	\refstepcounter{reviewer}%
+	\refstepcounter{referee}%
 	\@ifundefined{pdfbookmark}{}{%
-		\pdfbookmark[1]{Reviewer \arabic{reviewer}}{hyperref@reviewer\arabic{reviewer}}%
+		\pdfbookmark[1]{Referee~\Alph{referee}}{hyperref@referee\Alph{referee}}%
 	}%
-	\section*{Authors' Response to Reviewer~\arabic{reviewer}}
+	\section*{Authors' Response to Referee~\Alph{referee}}
+	\newrefcontext[labelprefix=\Alph{referee}]
 }
-%%%
 
-%%% Blocks %%%
-\newenvironment{generalcomment}{%
-	\begin{tcolorbox}[attach title to upper, title={General Comments}, after title={.\enskip}, fonttitle={\bfseries}, coltitle={colorcommentfg}, colback={colorcommentbg}, colframe={colorcommentframe},]
+\newenvironment{generalcomment}{
+	\begin{tcolorbox}[adjusted title={General Comments of Referee~\Alph{referee}}, fonttitle={\bfseries}, colback={colorcommentbg}, colframe={colorcommentframe},coltitle={colorcommentbg}]
 	}{\end{tcolorbox}}
 
-\newenvironment{revcomment}[1][]{\refstepcounter{revcomment}
-	\begin{tcolorbox}[adjusted title={Comment \arabic{revcomment}}, fonttitle={\bfseries}, colback={colorcommentbg}, colframe={colorcommentframe},coltitle={colorcommentbg},#1]
+\newenvironment{generalresponse}[1][{Thank you for the comment.}]{
+	\textbf{Response \Alph{referee}\arabic{revcomment}:} #1\par
+	}{\vspace{4em plus 0.2em minus 1.5em}}
+
+\newenvironment{revcomment}[1][]{
+	\refstepcounter{revcomment}
+	\begin{tcolorbox}[adjusted title={Comment \Alph{referee}\arabic{revcomment}}, fonttitle={\bfseries}, colback={colorcommentbg}, colframe={colorcommentframe},coltitle={colorcommentbg},#1]
 	}{\end{tcolorbox}}
 
-\newenvironment{revresponse}[1][{Thank you for the comment.}]{%
-	\textbf{Response:} #1\par
-}{\vspace{4em plus 0.2em minus 1.5em}}
+\newenvironment{revresponse}[1][{Thank you for the comment.}]{
+	\refstepcounter{revresponse}
+	\textbf{Response \Alph{referee}\arabic{revcomment}:} #1\par
+	}{\vspace{4em plus 0.2em minus 1.5em}}
 
-\newenvironment{changes}{\begin{tcolorbox}[breakable,colback={colorchangebg}, colframe={colorchangeframe},enhanced jigsaw,]
+\newenvironment{changes}{
+	\begin{tcolorbox}[breakable,colback={colorchangebg}, colframe={colorchangeframe},enhanced jigsaw]
 	}{\end{tcolorbox}}
 
-\newcommand{\printpartbibliography}[1]{\begin{refsegment}\nocite{#1}\printbibliography[heading=none,segment=\therefsegment]\end{refsegment}}
-
+\newcommand{\printbibliographyreferee}{
+	\printbibliography[heading=subbibliography,title={References for Referee \thereferee}]}
 
 \providecommand*{\revcommentautorefname}{Comment}
+\providecommand*{\revresponseautorefname}{Response}
 \AddToHook{package/hyperref/after}{
 	\hypersetup{
 		bookmarksopen,
-		pdfcreator={LaTeX with the reviewresponse package},
+		pdfcreator={LaTeX with the PhysicalReviewResponse package},
 	}
 }
 \AddToHook{begindocument/before}{
 	\IfPackageLoadedTF{hyperref}{
 		\hypersetup{
 			pdfauthor={\@author},
-			pdftitle={Review Response -- \@title{}},
-			pdfkeywords={\@journal{}, \@manuscript{}, review response}
+			pdftitle={Response\_\@manuscript\_\@firstauthor},
+			pdfsubject={Review Response},
+			pdfkeywords={\@journal}
 		}
 	}{}
 }
-\AddToHook{begindocument/end}{\def\sectionautorefname{Reviewer}}
+\AddToHook{begindocument/end}{\def\sectionautorefname{Referee}}

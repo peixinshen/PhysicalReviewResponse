@@ -8,114 +8,144 @@
 %% Fonts
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-%\usepackage{newcent} % different font
-%\usepackage[scaled]{beramono} % different monospace font
-
 
 %% Bibliography
-\usepackage[backend=biber,style=ieee,dashed=false,url=false,isbn=false,defernumbers=true,refsection=section]{biblatex}
+\usepackage[backend=biber,style=phys,biblabel=brackets,eprint=true,date=year,isbn=false,chaptertitle=false,pageranges=false,defernumbers=true,refsection=section]{biblatex}
+\AtBeginBibliography{\urlstyle{rm}}
+\DeclareFieldFormat[article,inbook,incollection,inproceedings,patent,thesis,unpublished]{citetitle}{#1\isdot}
+\DeclareFieldFormat[article,inbook,incollection,inproceedings,patent,thesis,unpublished]{title}{#1\isdot}
 \bibliography{literature.bib}
 
-\usepackage{hyperref}
+%% Packages
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{enumitem,amsmath,amssymb,braket,geometry}
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
 
-
+%% Information
 \title{My Awesome Paper Title}
-\author{Donald Duck and Mickey Mouse}
-\journal{IEEE Transactions on Wireless Communications}
-\manuscript{TWC-2020-X}
-\editorname{Dr. Doom}
+\author{Albert~Einstein, Max~Planck and Alan~Turing}
+\journal{Physical Review Lottery}
+\manuscript{LX12345}
+\firstauthor{Einstein}
+\editorname{Sir~Newton}
 
 \begin{document}
 \maketitle
 
 % Cover Letter
-\input{cover_letter.tex}
+Dear \theeditor,
 
-% Response to Editor
-\editor
-\begin{generalcomment}
-	The reviewer(s) have suggested some minor revisions to your manuscript. Therefore, I invite you to respond to the reviewer(s)' comments and revise your manuscript.
-\end{generalcomment}
-\begin{revresponse}[We appreciate your handling of the review process.]
-	According to the reviewers' comments, we have checked our manuscript and addressed them in the following way:
-	\begin{enumerate}
-		\item We added content.
-		\item We removed our wrong statements in Section~I.
-	\end{enumerate}
-\end{revresponse}
+We appreciate your handling of the review process. Please find enclosed the revised version of our previous manuscript {\themanuscript} {\thefirstauthor} entitled \enquote{\thetitle} for reconsideration in \thejournal.
+
+We would like to thank you and Referees for the valuable comments which help improving the quality of our manuscript.
+
+In this revision, we have carefully addressed all Referees' comments.
+
+A summary of main modifications and a detailed point-by-point response to the comments from Referees are given below.
+
+Sincerely,
+
+\theauthor
+
+\vfil
 
 
-% Reviewer 1
-\reviewer
+\thispagestyle{empty}
+\setcounter{page}{0}
+
+
+% Summary of Changes
+\change
+
+
+To enhance the legibility of this response letter, all comments are typeset in boxes. Rephrased or added sentences are typeset in color. The respective parts in the manuscript are highlighted to indicate changes.
+\begin{changes}
+\begin{enumerate}[leftmargin=0.3cm]
+	\item Based on \autoref{CommentA1}, we have added \dots.
+	\item Based on \autoref{CommentB1}, we have removed \dots.
+	\item Based on \autoref{CommentC1}, we have 
+	highlighted \dots.
+\end{enumerate}
+\end{changes}
+
+
+% Referee A
+\referee\label{RefereeA}
+
 \begin{generalcomment}
 	General comment about the work.
 \end{generalcomment}
-\begin{revresponse}[Thank you for your feedback.]
+\begin{generalresponse}[Thank you for your feedback.]
 	We have carefully addressed all the issues item by item as follows.
-\end{revresponse}
+\end{generalresponse}
 
-\begin{revcomment}
+\begin{revcomment}\label{CommentA1}
 	Your work is really good. However, you should change the title.
 \end{revcomment}
-\begin{revresponse}
+\begin{revresponse}\label{ResponseA1}
 	We agree that the title is somewhat misleading.
 	We therefore changed it in the current version of the manuscript.
 \end{revresponse}
 
-\begin{revcomment}
+\begin{revcomment}\label{CommentA2}
 	Everything else is really good.
 \end{revcomment}
-\begin{revresponse}
-	We totally agree. We also added the following to the new version of the manuscript
+\begin{revresponse}\label{ResponseA2}
+	We totally agree. We also added the following to the new version of the manuscript:
 	\begin{changes}
 		This really important sentence was added to the paper.
 	\end{changes}
+	This conclusion agrees with the preprint \cite{Perelman2002Entropy}.
 \end{revresponse}
 
-% Reviewer 2
-\reviewer
-\label{rev:2}
+\printbibliographyreferee
+
+% Referee B
+\referee\label{RefereeB}
+
 \begin{generalcomment}
 	In general, the work is well-written. However, I have the following concerns.
 \end{generalcomment}
-\begin{revresponse}[Thank you for your feedback.]
+\begin{generalresponse}[Thank you for your feedback.]
 	We have carefully addressed all the issues item by item as follows.
-\end{revresponse}
+\end{generalresponse}
 
-\begin{revcomment}\label{comment:work-not-good}
+\begin{revcomment}\label{CommentB1}
 	The work is not really good.
 \end{revcomment}
 \begin{revresponse}
 	:(
 \end{revresponse}
 
-\begin{revcomment}
+\begin{revcomment}\label{CommentB2}
 	You forgot to cite a very important reference (where I am an author)!
 \end{revcomment}
-\begin{revresponse}
+\begin{revresponse}\label{ResponseB2}
 	We are aware that citations on Google Scholar are very important to you.
-	Therefore, we added reference \cite{ReviewerReference}.
-	
-	Also check out our article \cite{Besser2020}.
-	
-	\printpartbibliography{ReviewerReference,Besser2020}
-	
-	And btw, your \autoref{comment:work-not-good} was mean! (We can use the \verb|\autoref| command.)
+	Therefore, we added reference \cite{RefereeReference}.
+	Also check out our article \cite{Einstein1935Can}.
+
+	BTW, your \autoref{CommentB1} was mean! (We can use the \verb|\autoref| command.)
 \end{revresponse}
 
+\printbibliographyreferee
 
-\reviewer
-\begin{revcomment}
-	Did you know, that the references can be separated for the individual reviewers?
+
+% Referee C
+\referee\label{RefereeC}
+
+\begin{revcomment}\label{CommentC1}
+	Did you know, that the references can be separated for the individual referees?
 \end{revcomment}
 \begin{revresponse}
 	Yes. When using \href{https://www.ctan.org/pkg/biblatex}{biblatex}, you can use the \texttt{refsection=section} option to achieve that.
-	If we cite a new reference like \cite{Besser2021} here, it will again be number [1].
+	If we cite a new reference like \cite{Turing1936Computable} here, it will be number [C1].
 	
 	Note that you might have to run \texttt{pdflatex} and \texttt{biber} multiple times.
 	
-	And reference [1] for \autoref{rev:2}~\cite{ReviewerReference} is now number [2].
-	
-	\printpartbibliography{Besser2021,ReviewerReference}
+	The reference [B1] in \autoref{ResponseB2}~ is now number \cite{RefereeReference}.
 \end{revresponse}
+
+\printbibliographyreferee
+
 \end{document}
